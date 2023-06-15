@@ -15,7 +15,6 @@ class PushNotificationPage extends StatefulWidget {
 }
 
 class _PushNotificationPageState extends State<PushNotificationPage> {
-  late final TextEditingController _tokenController;
   String? _token;
 
   @override
@@ -46,8 +45,6 @@ class _PushNotificationPageState extends State<PushNotificationPage> {
     }
 
     checkNotificationPermission();
-
-    _tokenController = TextEditingController();
   }
 
   @override
@@ -56,48 +53,8 @@ class _PushNotificationPageState extends State<PushNotificationPage> {
       appBar: AppBar(
         title: const Text('Push Notification'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text('Notification message'),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: () => _sendPushMessage(),
-                child: const Text('Send Notification to Mobile'),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text('Please input token to below (web)'),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: TextFormField(
-                controller: _tokenController,
-                decoration: const InputDecoration(hintText: 'token'),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  _token = _tokenController.value.text.toString();
-                  _sendPushMessage();
-                },
-                child: const Text('Send Notification to Web'),
-              ),
-            ),
-          ],
-        ),
+      body: const Center(
+        child: Text('Notification message'),
       ),
     );
   }
