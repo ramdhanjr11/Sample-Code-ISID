@@ -224,7 +224,7 @@ class _PushNotificationPageState extends State<PushNotificationPage> {
     }
 
     try {
-      await http.post(
+      final response = await http.post(
         Uri.parse(url),
         body: _constructFCMPayload(_token),
         headers: {
@@ -233,6 +233,7 @@ class _PushNotificationPageState extends State<PushNotificationPage> {
         },
       );
       print('FCM request for device sent!');
+      print('response : ${response.statusCode}');
       return true;
     } catch (e) {
       print(e);

@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sample_code_isid/file_pick/file_pick_page.dart';
 import 'package:sample_code_isid/firebase_options.dart';
-import 'package:sample_code_isid/push_notification/push_notification_background_handilng.dart';
+import 'package:sample_code_isid/push_notification/push_notification_background_handling.dart';
 import 'package:sample_code_isid/push_notification/push_notification_page.dart';
 import 'package:sample_code_isid/push_notification/push_notification_util.dart';
 
