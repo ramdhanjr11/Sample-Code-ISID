@@ -42,6 +42,9 @@
 </head>
 
 <body>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="main.dart.js" type="application/javascript"></script>
+
   <script>
     window.addEventListener('load', function (ev) {
       // Download main.dart.js
@@ -62,6 +65,7 @@
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
         navigator.serviceWorker.register("/firebase-messaging-sw.js");
+        var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
       });
     }
   </script>
