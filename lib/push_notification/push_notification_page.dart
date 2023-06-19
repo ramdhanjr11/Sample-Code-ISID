@@ -203,13 +203,13 @@ class _PushNotificationPageState extends State<PushNotificationPage> {
 
   String _constructFCMPayload(String? token) {
     return jsonEncode({
-      "message": {
-        "token": token,
-        "data": {},
-        "notification": {
-          "title": "FCM Message",
-          "body": "This is an FCM notification message!",
-        }
+      'to': token,
+      'message': {
+        'token': token,
+      },
+      "notification": {
+        "title": "Push Notification",
+        "body": "Firebase push notification"
       }
     });
   }
