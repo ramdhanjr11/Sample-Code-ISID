@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sample_code_isid/push_notification/push_notification_background_handling.dart';
 import 'package:sample_code_isid/push_notification/push_notification_util.dart';
 
 class PushNotificationPage extends StatefulWidget {
@@ -40,10 +41,36 @@ class _PushNotificationPageState extends State<PushNotificationPage> {
       log(_token!);
     });
 
-    // Handling forground messages
-    FirebaseMessaging.onMessage.listen(showFlutterNotification);
+    // Handling background message
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-    // Handling when user
+    // Handling forground messages
+    FirebaseMessaging.onMessage.listen((message) {
+      final notification = message.notification!;
+      final title = notification.title!;
+      final body = notification.body!;
+
+      ScaffoldMessenger.of(context).showMaterialBanner(
+        MaterialBanner(
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(title),
+              Text(body),
+            ],
+          ),
+          actions: [
+            OutlinedButton(
+              onPressed: () =>
+                  ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+    });
+
+    // Handling when user opened the notification
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       log("This message is opened : ${message.notification}");
     });
@@ -216,7 +243,6 @@ class _PushNotificationPageState extends State<PushNotificationPage> {
 
   Future<bool> _sendPushMessage() async {
     String url = 'https://fcm.googleapis.com/fcm/send';
-    // String secondUrl = 'https://api.rnfirebase.io/messaging/send';
 
     if (_token == null) {
       print('Unable to send FCM message, no token exists.');
