@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:sample_code_isid/file_pick/file_pick_page.dart';
 import 'package:sample_code_isid/firebase_options.dart';
+import 'package:sample_code_isid/local_database/pages/employees_page.dart';
 import 'package:sample_code_isid/push_notification/push_notification_background_handling.dart';
 import 'package:sample_code_isid/push_notification/push_notification_page.dart';
 import 'package:sample_code_isid/push_notification/push_notification_util.dart';
@@ -12,6 +13,8 @@ import 'package:http/http.dart' as http;
 
 String serverKey =
     'key=AAAAffp5RcE:APA91bFXxldXTIPpRpsgU4vSOGnw1S6d19OiSDmnx-d4wty_VanQxqCpF1eW-nTkBxVQNhTTiHhMsR6svY8H6S2TYe-Uh8gZnz5eagpw5IolaQxfuMvjy6ntiV2C5XqfN3qFJFy9GWLG';
+
+final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +39,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const HomePage(),
+      navigatorObservers: [routeObserver],
     );
   }
 }
@@ -116,6 +120,20 @@ class HomePage extends StatelessWidget {
                   },
                   child: const Text("Generate json")),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EmployeesPage(),
+                    ),
+                  );
+                },
+                child: const Text('Local database'),
+              ),
+            )
           ],
         ),
       ),
