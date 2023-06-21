@@ -34,10 +34,6 @@ class LocalDatabaseUtil {
 
   Future<bool> insertEmployee(EmployeeModel employee) async {
     final db = await database;
-
-    final employeeMap = employee.toMap();
-    employeeMap.remove('id');
-
     final result = await db!.insert(
       _tbName,
       employee.toMap(),
@@ -57,7 +53,12 @@ class LocalDatabaseUtil {
 
   Future<bool> updateEmployee(EmployeeModel employee) async {
     final db = await database;
-    final result = await db!.update(_tbName, employee.toMap());
+    final result = await db!.update(
+      _tbName,
+      employee.toMap(),
+      where: 'id = ?',
+      whereArgs: [employee.id],
+    );
 
     if (result == 0) return false;
     return true;

@@ -181,6 +181,7 @@ class _EmployeeFormPageState extends State<EmployeeFormPage> {
 
   _editData(BuildContext context) async {
     final data = EmployeeModel(
+      id: employeeModel!.id,
       fullname: fullnameController.text.trim(),
       address: addressController.text.trim(),
       field: fieldController.text.trim(),
