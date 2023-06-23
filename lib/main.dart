@@ -3,19 +3,23 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:sample_code_isid/file_pick/file_pick_page.dart';
 import 'package:sample_code_isid/firebase_options.dart';
+import 'package:sample_code_isid/local_database/employee_model.dart';
+import 'package:sample_code_isid/local_database/local_database_util.dart';
 import 'package:sample_code_isid/local_database/pages/employees_page.dart';
 import 'package:sample_code_isid/push_notification/push_notification_background_handling.dart';
 import 'package:sample_code_isid/push_notification/push_notification_page.dart';
 import 'package:sample_code_isid/push_notification/push_notification_util.dart';
 import 'package:http/http.dart' as http;
 
-final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Hive.initFlutter();
+  Hive.registerAdapter(EmployeeModelAdapter());
+  await Hive.openBox<EmployeeModel>(LocalDatabaseUtil.dbName);
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
@@ -36,7 +40,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const HomePage(),
-      navigatorObservers: [routeObserver],
     );
   }
 }

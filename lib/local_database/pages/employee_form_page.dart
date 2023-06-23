@@ -6,9 +6,15 @@ import 'package:sample_code_isid/local_database/local_database_util.dart';
 
 class EmployeeFormPage extends StatefulWidget {
   final bool isEdited;
+  final int? index;
   final EmployeeModel? employeeModel;
-  const EmployeeFormPage(
-      {super.key, required this.isEdited, this.employeeModel});
+
+  const EmployeeFormPage({
+    super.key,
+    this.index,
+    required this.isEdited,
+    this.employeeModel,
+  });
 
   @override
   State<EmployeeFormPage> createState() => _EmployeeFormPageState();
@@ -52,20 +58,8 @@ class _EmployeeFormPageState extends State<EmployeeFormPage> {
           if (isEdited)
             IconButton(
               onPressed: () async {
-                final result =
-                    await localDbUtil.deleteEmployee(employeeModel!.id!);
-
+                localDbUtil.deleteEmployee(widget.index!);
                 if (!mounted) return;
-
-                if (!result) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Failed to delete data..'),
-                    ),
-                  );
-                  return;
-                }
-
                 Navigator.pop(context);
               },
               icon: const Icon(Icons.delete),
@@ -160,19 +154,9 @@ class _EmployeeFormPageState extends State<EmployeeFormPage> {
     );
 
     try {
-      final result = await localDbUtil.insertEmployee(data);
-
+      log(data.toString());
+      localDbUtil.addEmployee(data);
       if (!mounted) return;
-
-      if (!result) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to insert data..'),
-          ),
-        );
-        return;
-      }
-
       Navigator.pop(context);
     } catch (e) {
       log(e.toString());
@@ -188,19 +172,8 @@ class _EmployeeFormPageState extends State<EmployeeFormPage> {
     );
 
     try {
-      final result = await localDbUtil.updateEmployee(data);
-
+      localDbUtil.updateEmployee(widget.index!, data);
       if (!mounted) return;
-
-      if (!result) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to update data..'),
-          ),
-        );
-        return;
-      }
-
       Navigator.pop(context);
     } catch (e) {
       log(e.toString());

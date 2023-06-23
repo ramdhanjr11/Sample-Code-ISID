@@ -1,74 +1,46 @@
-import 'package:path/path.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:sample_code_isid/local_database/employee_model.dart';
-import 'package:sqflite/sqflite.dart';
 
 class LocalDatabaseUtil {
   static LocalDatabaseUtil? _instance;
-  static const String _tbName = 'employee_tb';
-  static const String _dbName = 'employee_db';
+  static const String dbName = 'employee_db';
+  static Box<EmployeeModel>? _database;
 
   LocalDatabaseUtil._internal() {
+    database;
     _instance = this;
   }
 
   factory LocalDatabaseUtil() => _instance ?? LocalDatabaseUtil._internal();
 
-  Future<Database?> get database async => await _initialize();
-
-  Future<Database?> _initialize() async {
-    final databasePath = await getDatabasesPath();
-    const query = '''CREATE TABLE $_tbName(
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          fullname TEXT not null,
-          address TEXT not null,
-          field TEXT not null)''';
-
-    final db = await openDatabase(
-      join(databasePath, _dbName),
-      onCreate: (db, version) => db.execute(query),
-      version: 1,
-    );
-
-    return db;
+  Box<EmployeeModel> get database {
+    if (_database != null) return _database!;
+    _database = Hive.box(dbName);
+    return _database!;
   }
 
-  Future<bool> insertEmployee(EmployeeModel employee) async {
-    final db = await database;
-    final result = await db!.insert(
-      _tbName,
-      employee.toMap(),
-    );
-
-    if (result == 0) return false;
-    return true;
+  Future<void> close() async {
+    if (_database == null) return;
+    _database?.close();
   }
 
-  Future<List<EmployeeModel>> getEmployees() async {
-    final db = await database;
-    final result = await db!.query(_tbName);
-    final employees =
-        result.map((data) => EmployeeModel.fromMap(data)).toList();
-    return employees;
+  Future<void> addEmployee(EmployeeModel employeeModel) async {
+    final db = _database;
+    db!.add(employeeModel);
   }
 
-  Future<bool> updateEmployee(EmployeeModel employee) async {
-    final db = await database;
-    final result = await db!.update(
-      _tbName,
-      employee.toMap(),
-      where: 'id = ?',
-      whereArgs: [employee.id],
-    );
-
-    if (result == 0) return false;
-    return true;
+  Future<void> deleteEmployee(int index) async {
+    final db = _database;
+    db!.deleteAt(index);
   }
 
-  Future<bool> deleteEmployee(int id) async {
-    final db = await database;
-    final result = await db!.delete(_tbName, where: 'id = ?', whereArgs: [id]);
+  Future<void> updateEmployee(int index, EmployeeModel employeeModel) async {
+    final db = _database;
+    db!.putAt(index, employeeModel);
+  }
 
-    if (result == 0) return false;
-    return true;
+  Future<(List<int>, List<EmployeeModel>)> getEmployees() async {
+    final db = _database;
+    return (db!.keys as List<int>, db.values as List<EmployeeModel>);
   }
 }

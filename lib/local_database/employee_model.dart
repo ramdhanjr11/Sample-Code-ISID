@@ -1,7 +1,19 @@
+import 'package:hive/hive.dart';
+
+part 'employee_model.g.dart';
+
+@HiveType(typeId: 1)
 class EmployeeModel {
+  @HiveField(0)
   final int? id;
+
+  @HiveField(1)
   final String fullname;
+
+  @HiveField(2)
   final String address;
+
+  @HiveField(3)
   final String field;
 
   EmployeeModel({
@@ -10,20 +22,4 @@ class EmployeeModel {
     required this.address,
     required this.field,
   });
-
-  factory EmployeeModel.fromMap(Map<String, dynamic> map) {
-    return EmployeeModel(
-      id: map['id'],
-      fullname: map['fullname'],
-      address: map['address'],
-      field: map['field'],
-    );
-  }
-
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'fullname': fullname,
-        'address': address,
-        'field': field,
-      };
 }
